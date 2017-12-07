@@ -38,12 +38,16 @@ router.post('/', (req, res, next) => {
   })
 })
 
-router.delete('/delete/:id', (req, res, next) => {
+router.delete('/delete/:id?', (req, res, next) => {
+  if (!req.params.id) {
+    return next(new BadRequestError('VALIDATION', 'Missing id'))
+  }
+
   if (isNaN(req.params.id)) {
     return next(new BadRequestError('VALIDATION', 'Id not a number'))
   }
-  const Id = +req.params.id
 
+  const Id = +req.params.id
   // found courses by id
   const i = courseListCollection.findIndex(x => x.id === Id )
 

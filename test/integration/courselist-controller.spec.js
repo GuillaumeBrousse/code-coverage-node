@@ -68,7 +68,7 @@ describe('CourselistController', () => {
 
   describe('GL-2 done', () => {
     describe('When I delete a courseList (Delete /course-lists/delete/:id)', () => {
-      xit('should reject with a 400 when no id is given', () => {
+      it('should reject with a 400 when no id is given', () => {
         return request(app)
             .delete('/course-lists/delete/')
             .then((res) => {
@@ -81,6 +81,21 @@ describe('CourselistController', () => {
                 })
             })
       })
+
+      it('should reject with a 400 when id given is not an integer', () => {
+        return request(app)
+            .delete('/course-lists/delete/v5zv5vz')
+            .then((res) => {
+                res.status.should.equal(400)
+                res.body.should.eql({
+                    error: {
+                        code: 'VALIDATION',
+                        message: 'Id not a number'
+                    }
+                })
+            })
+      })
+
       it('should succesfuly delete a courseList', () => {
         const Id = 1
         return request(app)
@@ -106,19 +121,6 @@ describe('CourselistController', () => {
             const result = find(db.courseList)
             result.should.not.be.empty
             res.body.data.should.eql(result)
-          })
-      })
-    })
-  })
-
-  describe('GL-4 done', () => {
-    describe('When I need all articles of courseList (GET /course-lists/:id/articles)', () => {
-      it('should  succesfuly list all articles', () => {
-        return request(app)
-          .get('/course-lists/articles/2')
-          .then((res) => {
-            res.status.should.equal(200)
-            console.log('tessst')
           })
       })
     })
