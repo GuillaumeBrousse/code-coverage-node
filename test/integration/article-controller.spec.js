@@ -20,8 +20,8 @@ describe('ArticleController', () => {
   describe('GL-5', () => {
     describe('When I need all articles of courseList (GET /course-lists/articles/:id)', () => {
       it('should reject with a 404 when no id is given', () => {
-        return request(app).post('/course-lists/articles/').then((res) => {
-          res.status.should.equal(400)
+        return request(app).get('/course-lists/articles/').then((res) => {
+          res.status.should.equal(404)
           res.body.should.eql({
             error: {
               code: 'VALIDATION',
@@ -31,12 +31,12 @@ describe('ArticleController', () => {
         })
       })
 
-      xit('should reject with 404 when courseList id is not found', () => {
+      it('should reject with 404 when courseList id is not found', () => {
         const list_Id = 0
         return request(app)
-          .post('/course-lists/articles/'+list_Id)
+          .get('/course-lists/articles/'+list_Id)
           .then((res) => {
-            res.status.should.equal(400)
+            res.status.should.equal(404)
             res.body.should.eql({
               error: {
                 code: 'VALIDATION',
@@ -46,10 +46,10 @@ describe('ArticleController', () => {
         })
       })
 
-      xit('should succesfuly list all articles in courseList', () => {
+      it('should succesfuly list all articles in courseList', () => {
         const list_Id = 1
         return request(app)
-          .post('/course-lists/articles/'+list_Id)
+          .get('/course-lists/articles/'+list_Id)
           .then((res) => {
             res.status.should.equal(200)
             expect(res.body.data).to.be.an('object')
