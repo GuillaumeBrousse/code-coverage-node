@@ -12,8 +12,8 @@ router.get('/:id?', (req, res, next) => {
     return next(new NotFoundError('VALIDATION', 'No id is given id'))
   }
 
-  const list_Id = req.params.id
-  const result = find(courseListCollection, { id : list_Id })
+  const list_Id = +req.params.id
+  const result = find(courseListCollection, { id: list_Id })
 
 	if (result === undefined) {
 		return next(new NotFoundError('VALIDATION', 'courseList with id '+list_Id+' not found'))
@@ -21,7 +21,7 @@ router.get('/:id?', (req, res, next) => {
 
   res.json({
     id: result.id,
-    data: result.article
+    data: result.articles
   })
 
 })

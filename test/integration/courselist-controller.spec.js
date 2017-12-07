@@ -32,7 +32,7 @@ describe('CourselistController', () => {
       it('should reject when name is not unique', () => {
         return request(app)
           .post('/course-lists')
-          .send({ name: 'Toto' })
+          .send({ name: 'Apple' })
           .then((res) => {
             res.status.should.equal(400)
             res.body.should.eql({

@@ -52,12 +52,13 @@ describe('ArticleController', () => {
           .get('/course-lists/articles/'+list_Id)
           .then((res) => {
             res.status.should.equal(200)
-            expect(res.body.data).to.be.an('object')
-            res.body.data.id.should.equal(list_Id)
+            expect(res.body.data).to.be.an('array')
+            res.body.id.should.equal(list_Id)
 
             const result = find(db.courseList, { id: list_Id } )
             result.should.not.be.empty
-            result.article.should.eql(res.body.data)
+            result.id.should.equal(res.body.id)
+            result.articles.should.eql(res.body.data)
           })
       })
     })
