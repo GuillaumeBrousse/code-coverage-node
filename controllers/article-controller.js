@@ -9,14 +9,14 @@ const courseListCollection = db.courseList
 
 router.get('/:id?', (req, res, next) => {
   if (!req.params.id) {
-    return next(new BadRequestError('VALIDATION', 'No id is given id'))
+    return next(new NotFoundError('NOT_FOUND', 'No id is given id'))
   }
 
   const list_Id = req.params.id
   const result = find(courseListCollection, { id : list_Id })
 
 	if (result === undefined) {
-		return next(new BadRequestError('VALIDATION', 'courseList with id '+list_Id+' not found'))
+		return next(new NotFoundError('NOT_FOUND', 'courseList with id '+list_Id+' not found'))
 	}
 
   res.json({
