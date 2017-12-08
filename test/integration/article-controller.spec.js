@@ -1,5 +1,6 @@
 const request = require('supertest')
 const chai = require('chai')
+const _ = require('lodash')
 const expect = chai.expect
 chai.should()
 
@@ -64,5 +65,56 @@ describe('ArticleController', () => {
     })
 
   })
+  describe('GL-6', () => {
+    describe('When I need flag an article of a courseList (PATCH /course-lists/articles/flag/:id)', () => {
+      it('should reject with a 404 when no id is given', () => {
+        return request(app).patch('/course-lists/articles/flag').then((res) => {
+          res.status.should.equal(404)
+          res.body.should.eql({
+            error: {
+              code: 'VALIDATION',
+              message: 'No id is given'
+            }
+          })
+        })
+      })
+      it('should reject with 404 when article id is not found', () => {
+        const article_id = 0
+        return request(app)
+          .patch('/course-lists/articles/flag/'+article_id)
+          .then((res) => {
+            res.status.should.equal(404)
+            res.body.should.eql({
+              error: {
+                code: 'VALIDATION',
+                message: 'article with id '+article_id+' not found'
+              }
+            })
+        })
+      })
+      it('should succesful find the article ', () => {
+        const article_id = 1
+        return request(app)
+        .get('/course-lists')
+        .then((res) => {
+           var currList = res.body.data
+           var the_article = false
+      
+           _.each(currList, (articles) => {
+              _.each(articles, (article) => {
+                if(article.id === article_id)
+                  the_article =  article
+              })
+           })
+           the_article.should.not.be.empty
+           the_article.id.should.equal(article_id)
+        })
+      })
+
+    })
+  })
+  
 
 })
+
+
