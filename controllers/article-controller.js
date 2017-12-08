@@ -28,6 +28,39 @@ router.get('/:id?', (req, res, next) => {
 
 })
 
+router.post('/:id?', (req, res, next) => {
+  if (!req.params.id) {
+    return next(new NotFoundError('VALIDATION', 'No id is given'))
+  }
+
+  if (!req.body.name) {
+    return next(new BadRequestError('VALIDATION', 'Missing name'))
+  }
+
+  const list_Id = +req.params.id
+  const articleName = req.body.name
+
+  //get courseList
+  const result = find(courseListCollection, { id: list_Id })
+
+  // Check for name uniqueness
+  const checkArticle = find(result.articles, { itemName: articleName })
+  if (checkArticle) {
+    return next(new BadRequestError('VALIDATION', 'Name should be unique'))
+  }
+
+  const newArticle = {
+    id: (result.articles).length + 1,
+    itemName: articleName,
+    flag: false
+  }
+  result.articles.push(newArticle)
+
+  res.json({
+    data: result.articles
+  })
+})
+
 router.patch('/flag/:id?', (req, res, next) => {
   if (!req.params.id) {
     return next(new NotFoundError('VALIDATION', 'No id is given'))
