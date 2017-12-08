@@ -57,29 +57,35 @@ router.post('/:id?', (req, res, next) => {
   result.articles.push(newArticle)
 
   res.json({
-    data: result.articles
+    id: newArticle.id,
+    data: newArticle
   })
 })
 
-router.patch('/flag/:id?', (req, res, next) => {
-  if (!req.params.id) {
-    return next(new NotFoundError('VALIDATION', 'No id is given'))
+router.patch('/flag/:listId?/:articleId?', (req, res, next) => {
+  if (!req.params.listId) {
+    return next(new NotFoundError('VALIDATION', 'No courseList id is given'))
+  }
+  if (!req.params.articleId) {
+    return next(new NotFoundError('VALIDATION', 'No article id is given'))
   }
 
-  const article_id = +req.params.id
+  const list_id = +req.params.listId
+  const article_id = +req.params.articleId
+  
+  //find courseList id
+  const currList =find(courseListCollection, {id: list_id})
+	if (currList === undefined) {
+		return next(new NotFoundError('VALIDATION', 'courseList with id '+list_id+' not found'))
+	}
 
-  var the_article = false
-  var currList =find(courseListCollection)
-       each(currList, (articles) => {
-          each(articles, (article) => {
-            if(article.id === article_id)
-              the_article =  article
-          })
-       })
-	if (!the_article) {
+  //find article id
+  const the_article = find(currList.articles, {id: article_id})
+	if (the_article === undefined) {
 		return next(new NotFoundError('VALIDATION', 'article with id '+article_id+' not found'))
   }
   
+  the_article.flag = true
 
   res.json({
     id: the_article.id,

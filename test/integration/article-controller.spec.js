@@ -72,11 +72,13 @@ describe('ArticleController', () => {
           .send({ name: articleName })
           .then((res) => {
             res.status.should.equal(200)
-            expect(res.body.data).to.be.an('array')
+            expect(res.body.data).to.be.an('object')
+            res.body.data.itemName.should.equal(articleName)
 
             const result = find(db.courseList, { id: list_Id } )
             result.articles.should.not.be.empty
-            result.articles.should.eql(res.body.data)
+            find(result.articles, {id: res.body.id}).should.not.be.empty
+            find(result.articles, {itemName: articleName}).should.not.be.empty
           })
       })
     })
@@ -132,22 +134,53 @@ describe('ArticleController', () => {
   })
 
   describe('GL-6', () => {
-    describe('When I need flag an article of a courseList (PATCH /course-lists/articles/flag/:id)', () => {
-      it('should reject with a 404 when no id is given', () => {
-        return request(app).patch('/course-lists/articles/flag').then((res) => {
+    describe('When I need flag an article of a courseList (PATCH /course-lists/articles/flag/:listId/:articleId)', () => {
+      it('should reject with a 404 when no courseList id is given', () => {
+        return request(app).patch('/course-lists/articles/flag/').then((res) => {
           res.status.should.equal(404)
           res.body.should.eql({
             error: {
               code: 'VALIDATION',
-              message: 'No id is given'
+              message: 'No courseList id is given'
             }
           })
         })
       })
+
+      it('should reject with a 404 when no  article id is given', () => {
+        const list_id = 1
+        return request(app).patch('/course-lists/articles/flag/'+list_id).then((res) => {
+          res.status.should.equal(404)
+          res.body.should.eql({
+            error: {
+              code: 'VALIDATION',
+              message: 'No article id is given'
+            }
+          })
+        })
+      })
+
+      it('should reject with 404 when courseList id is not found', () => {
+        const list_id = 0
+        const article_id = 2
+        return request(app)
+          .patch('/course-lists/articles/flag/'+list_id+'/'+article_id)
+          .then((res) => {
+            res.status.should.equal(404)
+            res.body.should.eql({
+              error: {
+                code: 'VALIDATION',
+                message: 'courseList with id '+list_id+' not found'
+              }
+            })
+        })
+      })
+
       it('should reject with 404 when article id is not found', () => {
+        const list_id = 1
         const article_id = 0
         return request(app)
-          .patch('/course-lists/articles/flag/'+article_id)
+          .patch('/course-lists/articles/flag/'+list_id+'/'+article_id)
           .then((res) => {
             res.status.should.equal(404)
             res.body.should.eql({
@@ -158,22 +191,23 @@ describe('ArticleController', () => {
             })
         })
       })
-      it('should succesful find the article ', () => {
+
+      it('should succesful find and flag the article ', () => {
+        const list_id = 1
         const article_id = 1
         return request(app)
-        .get('/course-lists')
+          .patch('/course-lists/articles/flag/'+list_id+'/'+article_id)
         .then((res) => {
-           var currList = res.body.data
-           var the_article = false
-      
-           _.each(currList, (articles) => {
-              _.each(articles, (article) => {
-                if(article.id === article_id)
-                  the_article =  article
-              })
-           })
-           the_article.should.not.be.empty
-           the_article.id.should.equal(article_id)
+          res.status.should.equal(200)
+          expect(res.body.data).to.be.an('object')
+          res.body.id.should.equal(list_id)
+
+          const result = find(db.courseList, { id: list_id } )
+          result.articles.should.not.be.empty
+          const article = find(result.articles, {id: res.body.id})
+          article.should.not.be.empty
+          res.body.data.should.eql(article)
+          article.flag.should.equal(true)
         })
       })
 
