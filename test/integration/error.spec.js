@@ -18,7 +18,7 @@ describe('Errors', () => {
     })
 
     it('should return a 500', () => {
-      return request(app).get('/errors/500').then((res) => {
+      return request(app).get('/errors').then((res) => {
         res.status.should.equal(500)
         res.body.should.eql({
           error: {

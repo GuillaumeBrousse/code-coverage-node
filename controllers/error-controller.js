@@ -5,9 +5,8 @@ const HttpError = require('../errors/http-error')
 const { find } = require('lodash')
 
 
-router.get('/500', (req, res, next) => {
-    res.status(500)
-    return next(new HttpError())
+router.get('/', (req, res, next) => {
+    return next(res.status(500), new HttpError())
 })
 router.get('/400', (req, res, next) => {
     res.status(400)

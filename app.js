@@ -4,7 +4,6 @@ const HttpError = require('./errors/http-error')
 const NotFoundError = require('./errors/not-found')
 
 const app = express()
-
 const courselistRouter = require('./controllers/courselist-controller')
 const articleRouter = require('./controllers/article-controller')
 const errorRouter = require('./controllers/error-controller')
@@ -13,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // app.get('/', (req, res, next) => {
-//   req.send('OK')
+//   res.status(200)
 // })
 
 app.use('/course-lists', courselistRouter)
@@ -26,7 +25,7 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   if (!(err instanceof HttpError)) {
-    return next(new HttpError(err.message))
+    err = new HttpError(err.message)
   }
 
   res.status(err.statusCode)
