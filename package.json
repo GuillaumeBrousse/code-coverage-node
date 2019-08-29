@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js",
+    "dev": "node app.js",
     "test": "mocha ./test/**/*.spec.js --reporter dot",
     "test:watch": "mocha -w ./test/**/*.spec.js --reporter dot",
     "test-coverage": "nyc --reporter=text mocha ./test/**/*.spec.js",
@@ -17,8 +17,8 @@
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "istanbul": "^0.4.5",
-    "lodash": "^4.17.4",
-    "nyc": "^11.3.0"
+    "lodash": "^4.17.15",
+    "nyc": "^14.1.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
