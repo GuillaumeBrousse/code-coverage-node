@@ -3,7 +3,6 @@ const router = express.Router();
 const BadRequestError = require("../errors/bad-request");
 const NotFoundError = require("../errors/not-found");
 const { find } = require("lodash");
-const { each } = require("lodash");
 
 const db = require("../data/db");
 const courseListCollection = db.courseList;

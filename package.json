@@ -16,7 +16,6 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "istanbul": "^0.4.5",
     "lodash": "^4.17.15",
     "nyc": "^14.1.1"
   },
