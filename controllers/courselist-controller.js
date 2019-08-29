@@ -13,6 +13,22 @@ router.get("/", (req, res, next) => {
   });
 });
 
+router.get("/:id?", (req, res, next) => {
+  if (!req.params.id) {
+    return next(new BadRequestError("VALIDATION", "Missing id"));
+  }
+
+  if (isNaN(req.params.id)) {
+    return next(new BadRequestError("VALIDATION", "Id not a number"));
+  }
+
+  const Id = +req.params.id;
+
+  res.json({
+    data: courseListCollection.find(x => x.id === Id)
+  });
+});
+
 router.post("/", (req, res, next) => {
   if (!req.body.name) {
     return next(new BadRequestError("VALIDATION", "Missing name"));
