@@ -13,7 +13,7 @@ router.get("/", (req, res, next) => {
   });
 });
 
-router.get("/:id?", (req, res, next) => {
+router.get("getList/:id?", (req, res, next) => {
   if (!req.params.id) {
     return next(new BadRequestError("VALIDATION", "Missing id"));
   }

@@ -9,7 +9,7 @@ const courseListCollection = db.courseList;
 
 router.get("/:id?", (req, res, next) => {
   if (!req.params.id) {
-    return next(new NotFoundError("VALIDATION", "No id is given id"));
+    return next(new NotFoundError("ERROR", "No id is given id"));
   }
 
   const list_Id = +req.params.id;
