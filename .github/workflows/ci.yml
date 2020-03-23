@@ -18,5 +18,4 @@ jobs:
           node-version: 10
       - run: npm ci
       - run: npm run test
-      - run: npm run test:watch
       - run: npm run test-coverage
